@@ -105,11 +105,11 @@ export interface AutoRetryOptions {
 export function autoRetry(options?: Partial<AutoRetryOptions>): Transformer {
     const maxDelay = options?.maxDelaySeconds ?? Infinity;
     const maxRetries = options?.maxRetryAttempts ?? Infinity;
-    const rethrowInternalServerErrors = options?.rethrowInternalServerErrors ??
-        false;
+    const rethrowInternalServerErrors =
+        options?.rethrowInternalServerErrors ?? false;
     const rethrowHttpErrors = options?.rethrowHttpErrors ?? false;
-    const rethrowChatMigrationErrors = options?.rethrowChatMigrationErrors ??
-        false;
+    const rethrowChatMigrationErrors =
+        options?.rethrowChatMigrationErrors ?? false;
     return async (prev, method, payload, signal) => {
         let remainingAttempts = maxRetries;
         let nextDelay = INITIAL_LAST_DELAY;
@@ -127,12 +127,13 @@ export function autoRetry(options?: Partial<AutoRetryOptions>): Transformer {
                 } catch (e) {
                     if (
                         (signal === undefined || !signal.aborted) &&
-                        !rethrowHttpErrors && e instanceof HttpError
+                        !rethrowHttpErrors &&
+                        e instanceof HttpError
                     ) {
-												if (remainingAttempts <= 0) throw e
+                        if (remainingAttempts <= 0) throw e;
 
-												remainingAttempts--
-												
+                        remainingAttempts--;
+
                         debug(
                             `HttpError thrown, will retry '${method}' after ${nextDelay} seconds (${e.message})`,
                         );
@@ -163,8 +164,10 @@ export function autoRetry(options?: Partial<AutoRetryOptions>): Transformer {
                 retry = true;
             } else if (
                 typeof result.parameters?.migrate_to_chat_id === "number" &&
-                typeof payload === "object" && payload !== null &&
-                "chat_id" in payload && typeof payload.chat_id === "number" &&
+                typeof payload === "object" &&
+                payload !== null &&
+                "chat_id" in payload &&
+                typeof payload.chat_id === "number" &&
                 !rethrowChatMigrationErrors
             ) {
                 debug(
