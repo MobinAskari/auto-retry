@@ -105,9 +105,11 @@ export interface AutoRetryOptions {
 export function autoRetry(options?: Partial<AutoRetryOptions>): Transformer {
     const maxDelay = options?.maxDelaySeconds ?? Infinity;
     const maxRetries = options?.maxRetryAttempts ?? Infinity;
-    const rethrowInternalServerErrors = options?.rethrowInternalServerErrors ?? false;
+    const rethrowInternalServerErrors = options?.rethrowInternalServerErrors ??
+        false;
     const rethrowHttpErrors = options?.rethrowHttpErrors ?? false;
-    const rethrowChatMigrationErrors = options?.rethrowChatMigrationErrors ?? false;
+    const rethrowChatMigrationErrors = options?.rethrowChatMigrationErrors ??
+        false;
     return async (prev, method, payload, signal) => {
         let remainingAttempts = maxRetries;
         let nextDelay = INITIAL_LAST_DELAY;
