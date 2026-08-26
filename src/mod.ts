@@ -175,7 +175,7 @@ export function autoRetry(options?: Partial<AutoRetryOptions>): Transformer {
                 nextDelay = INITIAL_LAST_DELAY;
                 retry = true;
             } else if (
-                result.error_code >= 500 && 
+                result.error_code >= 500 &&
                 !rethrowInternalServerErrors
             ) {
                 debug(
